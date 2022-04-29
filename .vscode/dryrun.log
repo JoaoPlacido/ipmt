@@ -1,0 +1,6 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory '/home/joao/Área de Trabalho/ipmt'
+make: Leaving directory '/home/joao/Área de Trabalho/ipmt'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+

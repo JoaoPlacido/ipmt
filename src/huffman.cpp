@@ -11,6 +11,7 @@
 #include <regex>
 #include <cstdlib>
 #include <unistd.h>
+#include <cstdio>
 
 using namespace std;
 using std::cout; using std::endl;
@@ -127,6 +128,9 @@ void compactar(string textname,map<char,string> dic,Node* tree){
                 }
             }
             if(j!=7) output_fstream<<byte;
+            file.close();
+            output_fstream.close();
+            remove(textname.c_str());
         }
     }   
 }
@@ -153,7 +157,38 @@ Node* reGenTree(map<char,string> dict){
     }
     return tree;
 }
-
+void compare(string text1name,string text2name){
+    ifstream file1(text1name);
+    ifstream file2(text2name);
+    if(!file1.is_open() or !file2.is_open()){
+        cout<<"Um dos arquivos não foi encotrado"<<endl;
+        exit(0);
+    }else{
+        string line1,line2;
+        int nline=1;
+        bool erro= false;
+        while(!file1.eof() or !file2.eof()){
+            getline(file1,line1);
+            getline(file2,line2);
+            if(line1 != line2){
+                cout<<"erro na linha "<<nline<<":"<<endl;
+                cout<<line1<<endl;
+                cout<<endl;
+                cout<<line2<<endl;
+                erro=true;
+            }
+            nline++;
+        }
+        cout<<"numero de linhas"<<nline<<endl;
+        if(!file1.eof()){
+            cout<<"o arquivo "<<text1name<<" gerou texto a mais";
+        }else if(!file2.eof()){
+            cout<<"o arquivo "<<text2name<<" gerou texto a mais";
+        }else if(!erro){
+            cout<<"os textos são iguais"<<endl;
+        }
+    }
+}
 void descompactar(string textcompname){
     if(regex_match(textcompname,regex(".*.myz"))){
         ifstream file(textcompname,ios::binary);
@@ -173,7 +208,7 @@ void descompactar(string textcompname){
                 string line;
                 getline(file,line);
                 tam=stoi(line);
-                cout<<tam<<endl;
+                //cout<<tam<<endl;
                 map<char,string> dict;
                 for(int i=0;i<tam;i++){
                     getline(file,line);
@@ -189,7 +224,7 @@ void descompactar(string textcompname){
                         dict[c]=line;
                     }
                 }
-                for(auto &item:dict) cout<<item.first<<":"<<item.second<<endl;
+                //for(auto &item:dict) cout<<item.first<<":"<<item.second<<endl;
                 Node* tree = reGenTree(dict);
                 Node* aux = tree;
                 char c;
@@ -224,24 +259,26 @@ void descompactar(string textcompname){
                 }
             }    
         }
+        file.close();
+        remove(textcompname.c_str());
     }else{
         cout<<"O arquivo tem que ser .myz"<<endl;
     }    
 }
 void huffman(string textname){
     map<char,int> freq = frenqTab(textname);
-      
-    //cout<< "[";
+    // cout<< "[";
     // for(auto &item : freq){
     //     cout << item.first << ":" <<item.second<<" ";
     // }
-    // cout<<"]"<<endl;
+    //  cout<<"]"<<endl;
 
      priority_queue <Node*,vector<Node*>,compOCC>priFila;
     for(auto &item:freq)priFila.push(new Node(item.second,item.first));
     struct Node* huffTree = genTree(priFila);
     map<char,string> dict;
     genDict(huffTree,dict,"");
+    // cout<<"Tamanho do alfabeto: "<<dict.size()<<endl;
     // cout<< "[";
     // for(auto &item : dict){
     //     cout << item.first << ":" <<item.second<<" "<<"|"<< freq[item.first]<<endl;

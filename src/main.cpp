@@ -29,6 +29,7 @@ int main(int argc,char *argv[]){
         else if(mode =="search") cout<< "modo de busca"<<endl;
         else if(mode =="zip") huffman(argv[2]);
         else if(mode =="unzip") descompactar(argv[2]);
+        else if(mode =="compare") compare(argv[2],argv[3]);
         else cout<<"modo não reconhecido"<< endl;
     }
     
